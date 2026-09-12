@@ -13,6 +13,10 @@ GameObject:
   - component: {fileID: 5727777433586943253}
   - component: {fileID: 2439156183437514537}
   - component: {fileID: 1089626790747576144}
+  - component: {fileID: 6442387858734539982}
+  - component: {fileID: 2490289791380017837}
+  - component: {fileID: 7264610078593127200}
+  - component: {fileID: 2799383021626900426}
   - component: {fileID: 7317132678032697888}
   m_Layer: 0
   m_Name: Detective
@@ -174,6 +178,65 @@ MonoBehaviour:
   waypoints: []
   patrolSpeed: 2.5
   arrivalThreshold: 0.15
+--- !u!114 &6442387858734539982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5288095281540069538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2fb975b17b4ab442b974324fd215ce8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DetectiveDetection
+  detectionRange: 1.5
+  evidenceMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!114 &2490289791380017837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5288095281540069538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcfe63732e9ba9e48aced79cdd0ded6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DetectiveInvestigation
+  investigationDuration: 3
+  investigationArrivalThreshold: 0.75
+--- !u!114 &7264610078593127200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5288095281540069538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eabca8d9b3278fe4b80c2ddc6b5b077f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DetectiveKillerDetection
+  killerDetectionRange: 5
+  occlusionMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!114 &2799383021626900426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5288095281540069538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee060df5d0958324e8cd0419a066bb3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DetectiveChase
+  chaseSpeed: 4
 --- !u!114 &7317132678032697888
 MonoBehaviour:
   m_ObjectHideFlags: 0

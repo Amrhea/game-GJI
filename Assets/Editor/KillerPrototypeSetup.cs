@@ -9,8 +9,8 @@ using UnityEngine.Rendering.Universal;
 
 /// <summary>
 /// One-click setup for the killer gameplay prototype:
-/// generates the placeholder sprite, the Killer / Target / Corpse / Blood / Detective
-/// prefabs and the KillerPrototype scene. Run via: Tools > Game Jam > Setup Killer Prototype Scene.
+/// generates the placeholder sprite, the Killer / Target / Corpse / Blood / Detective /
+/// Janitor prefabs and the KillerPrototype scene. Run via: Tools > Game Jam > Setup Killer Prototype Scene.
 /// Re-running is safe; existing assets are overwritten.
 /// </summary>
 public static class KillerPrototypeSetup
@@ -34,8 +34,9 @@ public static class KillerPrototypeSetup
         GameObject target = CreateAndSavePrefab(CreateTarget(square), $"{PrefabFolder}/KillTarget.prefab");
         GameObject killer = CreateAndSavePrefab(CreateKiller(actions, square, corpse, blood), $"{PrefabFolder}/Killer.prefab");
         GameObject detective = CreateAndSavePrefab(CreateDetective(square), $"{PrefabFolder}/Detective.prefab");
+        GameObject janitor = CreateAndSavePrefab(CreateJanitor(actions, square), $"{PrefabFolder}/Janitor.prefab");
 
-        BuildScene(killer, target, detective, square);
+        BuildScene(killer, target, detective, janitor, square);
 
         Debug.Log("[KillerPrototypeSetup] Done. Open 'Assets/Scenes/KillerPrototype.unity' and press Play. " +
                   "Controls: WASD/Arrows move, LeftShift sprint, Space kill. " +
@@ -199,7 +200,35 @@ public static class KillerPrototypeSetup
         return go;
     }
 
-    private static void BuildScene(GameObject killerPrefab, GameObject targetPrefab, GameObject detectivePrefab, Sprite square)
+    private static GameObject CreateJanitor(InputActionAsset actions, Sprite square)
+    {
+        var go = new GameObject("Janitor");
+
+        SpriteRenderer renderer = go.AddComponent<SpriteRenderer>();
+        renderer.sprite = square;
+        renderer.color = new Color(0.1f, 0.55f, 0.5f);
+        renderer.sortingOrder = 5;
+
+        CircleCollider2D collider = go.AddComponent<CircleCollider2D>();
+        collider.radius = 0.5f;
+
+        Rigidbody2D body = go.AddComponent<Rigidbody2D>();
+        body.bodyType = RigidbodyType2D.Kinematic;
+        body.gravityScale = 0f;
+        body.freezeRotation = true;
+        body.interpolation = RigidbodyInterpolation2D.Interpolate;
+        body.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+
+        JanitorInput input = go.AddComponent<JanitorInput>();
+        SetField(input, "inputActions", actions);
+
+        JanitorMovement movement = go.AddComponent<JanitorMovement>();
+        SetField(movement, "input", input);
+
+        return go;
+    }
+
+    private static void BuildScene(GameObject killerPrefab, GameObject targetPrefab, GameObject detectivePrefab, GameObject janitorPrefab, Sprite square)
     {
         EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
         EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
@@ -250,6 +279,10 @@ public static class KillerPrototypeSetup
         // Detective + prototype patrol route (temporary positions, final warehouse TBD).
         GameObject detective = (GameObject)PrefabUtility.InstantiatePrefab(detectivePrefab);
         detective.transform.position = new Vector3(12f, 0f, 0f);
+
+        // Janitor (movement prototype only — cleanup comes in a later task).
+        GameObject janitor = (GameObject)PrefabUtility.InstantiatePrefab(janitorPrefab);
+        janitor.transform.position = new Vector3(-12f, 0f, 0f);
 
         var routeParent = new GameObject("Patrol Points");
         Vector3[] routePositions =

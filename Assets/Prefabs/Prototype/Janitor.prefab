@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &8115054128037791031
+--- !u!1 &616156971638098697
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,30 +8,26 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1903757766309604354}
-  - component: {fileID: 1508402407459729256}
-  - component: {fileID: 3195889960424594185}
-  - component: {fileID: 7713233424352873096}
-  - component: {fileID: 2645891753180307210}
-  - component: {fileID: 5909663561319082544}
-  - component: {fileID: 6003863059933736423}
-  - component: {fileID: 2766950530014412753}
-  - component: {fileID: 1504234393944644208}
-  - component: {fileID: 3636974431613397392}
+  - component: {fileID: 3358022492353258149}
+  - component: {fileID: 3183303509576748514}
+  - component: {fileID: 7659197574985306555}
+  - component: {fileID: 544561798535896476}
+  - component: {fileID: 3634948030944737157}
+  - component: {fileID: 4858174009455710281}
   m_Layer: 0
-  m_Name: Killer
+  m_Name: Janitor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1903757766309604354
+--- !u!4 &3358022492353258149
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8115054128037791031}
+  m_GameObject: {fileID: 616156971638098697}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -40,14 +36,14 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &1508402407459729256
+--- !u!212 &3183303509576748514
 SpriteRenderer:
   serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8115054128037791031}
+  m_GameObject: {fileID: 616156971638098697}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -90,7 +86,7 @@ SpriteRenderer:
   m_SortingOrder: 5
   m_MaskInteraction: 0
   m_Sprite: {fileID: 2868101353237766674, guid: ebe5c27d720d07f4bb32b76a91688420, type: 3}
-  m_Color: {r: 0.18, g: 0.18, b: 0.22, a: 1}
+  m_Color: {r: 0.1, g: 0.55, b: 0.5, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -100,13 +96,13 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
---- !u!58 &3195889960424594185
+--- !u!58 &7659197574985306555
 CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8115054128037791031}
+  m_GameObject: {fileID: 616156971638098697}
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
@@ -136,14 +132,14 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
---- !u!50 &7713233424352873096
+--- !u!50 &544561798535896476
 Rigidbody2D:
   serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8115054128037791031}
+  m_GameObject: {fileID: 616156971638098697}
   m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
@@ -163,98 +159,31 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!114 &2645891753180307210
+--- !u!114 &3634948030944737157
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8115054128037791031}
+  m_GameObject: {fileID: 616156971638098697}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9fc557eabb26f314ca8650a09011ac0c, type: 3}
+  m_Script: {fileID: 11500000, guid: c3f3328505630e44d938a28d9ff9612a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::KillerInput
+  m_EditorClassIdentifier: Assembly-CSharp::JanitorInput
   inputActions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   moveAction: Move
-  sprintAction: Sprint
-  killAction: Kill
---- !u!114 &5909663561319082544
+--- !u!114 &4858174009455710281
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8115054128037791031}
+  m_GameObject: {fileID: 616156971638098697}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 339c6c765853dde4a87d7ee359def4b8, type: 3}
+  m_Script: {fileID: 11500000, guid: 9ee9d4d911cb6d84fafdc8f0ad845260, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Stamina
-  maxStamina: 100
-  sprintDrainPerSecond: 25
-  recoveryPerSecond: 20
-  recoveryDelay: 0.75
-  emptyLockThreshold: 10
---- !u!114 &6003863059933736423
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8115054128037791031}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53b360dfd2a410744b76eafd40dfce0f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::KillerIdentity
---- !u!114 &2766950530014412753
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8115054128037791031}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 854c90c1b20e3f14bb230eecc709cc05, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::KillerMovement
-  input: {fileID: 2645891753180307210}
+  m_EditorClassIdentifier: Assembly-CSharp::JanitorMovement
+  input: {fileID: 3634948030944737157}
   walkSpeed: 5
-  sprintSpeedMultiplier: 1.6
---- !u!114 &1504234393944644208
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8115054128037791031}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 175793679a01f564aba0e170b379868d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::KillerKill
-  input: {fileID: 2645891753180307210}
-  killRange: 1.5
-  killCooldown: 4
-  targetMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  corpsePrefab: {fileID: 3008413604923789435, guid: b3167e4a03a1b4b43b5b12b930c74b49, type: 3}
-  bloodPrefab: {fileID: 3290923692479342717, guid: aa013a73073081445a7b7473c1c675ed, type: 3}
---- !u!114 &3636974431613397392
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8115054128037791031}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: abad2ef3387e3fb40b6143ead3460198, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::KillerDebugHud
-  stamina: {fileID: 5909663561319082544}
-  movement: {fileID: 2766950530014412753}
-  kill: {fileID: 1504234393944644208}
