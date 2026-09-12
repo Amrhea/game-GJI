@@ -11,6 +11,7 @@ public class DetectiveDebugHud : MonoBehaviour
     private DetectiveInvestigation _investigation;
     private DetectiveKillerDetection _killerDetection;
     private DetectiveChase _chase;
+    private DetectiveCatch _catch;
 
     private void Awake()
     {
@@ -19,35 +20,48 @@ public class DetectiveDebugHud : MonoBehaviour
         _investigation = GetComponent<DetectiveInvestigation>();
         _killerDetection = GetComponent<DetectiveKillerDetection>();
         _chase = GetComponent<DetectiveChase>();
+        _catch = GetComponent<DetectiveCatch>();
     }
 
     private void OnGUI()
     {
-        GUILayout.BeginArea(new Rect(10f, 300f, 340f, 230f), GUI.skin.box);
+        GUILayout.BeginArea(new Rect(10f, 300f, 340f, 260f), GUI.skin.box);
 
         GUILayout.Label("=== DETECTIVE DEBUG ===");
 
-        bool chasing = _chase != null && _chase.IsChasing;
+        bool caught = _catch != null && _catch.IsKillerCaught;
+        bool chasing = !caught && _chase != null && _chase.IsChasing;
         bool killerDetected = _killerDetection != null && _killerDetection.IsKillerDetected;
-        bool investigating = !killerDetected && _investigation != null && _investigation.IsInvestigating;
-        string state = chasing
-            ? "CHASING"
-            : killerDetected
-                ? "KILLER DETECTED"
-                : investigating
-                    ? (_investigation.RemainingTime > 0f ? "INVESTIGATING" : "MOVING TO EVIDENCE")
-                    : "PATROLLING";
+        bool investigating = !caught && !killerDetected && _investigation != null && _investigation.IsInvestigating;
+        string state = caught
+            ? "KILLER CAUGHT"
+            : chasing
+                ? "CHASING"
+                : killerDetected
+                    ? "KILLER DETECTED"
+                    : investigating
+                        ? (_investigation.RemainingTime > 0f ? "INVESTIGATING" : "MOVING TO EVIDENCE")
+                        : "PATROLLING";
         GUILayout.Label($"State: {state}");
         GUILayout.Label($"Evidence Awareness: {(_investigation != null && _investigation.HasEvidenceAwareness ? "YES" : "NO")}");
 
-        if (chasing)
+        if (caught)
+        {
+            string caughtDistance = _catch.DistanceToKiller > 0f
+                ? $"{_catch.DistanceToKiller} m"
+                : "(n/a)";
+            GUILayout.Label($"Killer distance: {caughtDistance}  catch range {_catch.CatchRange} m");
+            GUILayout.Label("KillerCaught event: FIRED (one-shot) — detective frozen");
+        }
+        else if (chasing)
         {
             Transform killer = _killerDetection.KillerTransform;
             string killerPos = killer != null
                 ? $"({killer.position.x}, {killer.position.y})"
                 : "(none)";
             GUILayout.Label($"Killer distance: {_killerDetection.DistanceToKiller} m  " +
-                            $"chase speed {_chase.ChaseSpeed} m/s  pos {killerPos}");
+                            $"chase speed {_chase.ChaseSpeed} m/s  " +
+                            $"catch range {(_catch != null ? _catch.CatchRange : 0f)} m  pos {killerPos}");
         }
         else if (killerDetected)
         {
