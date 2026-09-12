@@ -46,12 +46,19 @@ public class DetectivePatrol : MonoBehaviour
     public bool IsPatrolPaused => _paused;
 
     /// <summary>
-    /// Moves one kinematic step toward the destination using patrol speed and the
-    /// same step clamping as the route patrol. Returns the remaining distance
-    /// after the step. Shared with evidence investigation so movement logic
-    /// stays in one place.
+    /// Moves one kinematic step toward the destination at patrol speed, with the
+    /// same step clamping as the route patrol. Returns the remaining distance.
+    /// Convenience overload for callers that want the baseline patrol speed.
     /// </summary>
-    public float MoveStepToward(Vector2 destination)
+    public float MoveStepToward(Vector2 destination) => MoveStepToward(destination, patrolSpeed);
+
+    /// <summary>
+    /// Moves one kinematic step toward the destination at the given speed, with the
+    /// same step clamping as the route patrol. Returns the remaining distance after
+    /// the step. Shared by evidence investigation and chase so movement logic stays
+    /// in one place.
+    /// </summary>
+    public float MoveStepToward(Vector2 destination, float speed)
     {
         Vector2 position = _body.position;
         Vector2 toDestination = destination - position;
@@ -62,7 +69,7 @@ public class DetectivePatrol : MonoBehaviour
             return 0f;
         }
 
-        float step = Mathf.Min(patrolSpeed * Time.fixedDeltaTime, distance);
+        float step = Mathf.Min(speed * Time.fixedDeltaTime, distance);
         _body.MovePosition(position + toDestination / distance * step);
         return distance - step;
     }

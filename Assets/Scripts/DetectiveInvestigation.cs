@@ -102,6 +102,13 @@ public class DetectiveInvestigation : MonoBehaviour
 
     private void BeginInvestigation(Evidence evidence)
     {
+        // While the killer is directly detected the detective is chasing; evidence
+        // is ignored so chase owns movement (no competing investigation movement).
+        if (_killerDetection != null && _killerDetection.IsKillerDetected)
+        {
+            return;
+        }
+
         _target = evidence;
         _state = InvestigationState.MovingToEvidence;
         _timer = 0f;

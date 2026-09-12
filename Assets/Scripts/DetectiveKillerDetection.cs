@@ -8,9 +8,9 @@ using UnityEngine;
 ///   2. an unobstructed Physics2D.Linecast reaches the killer.
 /// Detection is binary and local; there is no suspicion meter, vision cone or
 /// memory. While detected the detective stops all lower-priority movement
-/// (patrol / evidence investigation) but does NOT approach the killer —
-/// chase is a separate future task. KillerDetected/KillerLost fire once per
-/// transition, so the console is not spammed every frame.
+/// (patrol / evidence investigation); DetectiveChase consumes the KillerDetected
+/// event to start pursuing. KillerDetected/KillerLost fire once per transition,
+/// so the console is not spammed every frame.
 /// </summary>
 [RequireComponent(typeof(DetectivePatrol))]
 [RequireComponent(typeof(Rigidbody2D))]
@@ -36,6 +36,9 @@ public class DetectiveKillerDetection : MonoBehaviour
 
     /// <summary>Distance to the killer on the last fixed update.</summary>
     public float DistanceToKiller { get; private set; }
+
+    /// <summary>The killer's transform (current position), or null if none found.</summary>
+    public Transform KillerTransform => _killer != null ? _killer.transform : null;
 
     public float DetectionRange => killerDetectionRange;
 

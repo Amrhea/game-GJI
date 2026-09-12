@@ -193,6 +193,7 @@ public static class KillerPrototypeSetup
         go.AddComponent<DetectiveDetection>();
         go.AddComponent<DetectiveInvestigation>();
         go.AddComponent<DetectiveKillerDetection>();
+        go.AddComponent<DetectiveChase>();
         go.AddComponent<DetectiveDebugHud>();
 
         return go;
