@@ -36,6 +36,14 @@ public class DetectiveInvestigation : MonoBehaviour
     /// <summary>True while the detective is traveling to or inspecting evidence.</summary>
     public bool IsInvestigating => _state != InvestigationState.Patrolling;
 
+    /// <summary>
+    /// True once the detective has successfully completed investigating at least
+    /// one evidence object (Blood or Corpse). Gates chase: the detective may only
+    /// pursue the killer after this becomes true. Persists for the rest of the
+    /// session and does not reset when evidence is removed or the killer is lost.
+    /// </summary>
+    public bool HasEvidenceAwareness { get; private set; }
+
     /// <summary>The evidence currently being investigated, or null.</summary>
     public Evidence TargetEvidence => _target;
 
@@ -102,9 +110,10 @@ public class DetectiveInvestigation : MonoBehaviour
 
     private void BeginInvestigation(Evidence evidence)
     {
-        // While the killer is directly detected the detective is chasing; evidence
-        // is ignored so chase owns movement (no competing investigation movement).
-        if (_killerDetection != null && _killerDetection.IsKillerDetected)
+        // Chase preempts a NEW investigation, but only once evidence awareness
+        // already exists (i.e. chase can actually be active). Without awareness,
+        // seeing the killer must NOT interrupt an in-progress investigation.
+        if (_killerDetection != null && _killerDetection.IsKillerDetected && HasEvidenceAwareness)
         {
             return;
         }
@@ -153,6 +162,10 @@ public class DetectiveInvestigation : MonoBehaviour
         // Mark this evidence object as examined so detection stops reacting to
         // it and patrol resumes; a NEW evidence object (new kill) is fresh.
         _investigated.Add(_target);
+
+        // First successfully investigated evidence unlocks chase permanently.
+        HasEvidenceAwareness = true;
+
         EndInvestigation("Investigation complete");
     }
 

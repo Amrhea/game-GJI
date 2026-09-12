@@ -23,7 +23,7 @@ public class DetectiveDebugHud : MonoBehaviour
 
     private void OnGUI()
     {
-        GUILayout.BeginArea(new Rect(10f, 300f, 340f, 210f), GUI.skin.box);
+        GUILayout.BeginArea(new Rect(10f, 300f, 340f, 230f), GUI.skin.box);
 
         GUILayout.Label("=== DETECTIVE DEBUG ===");
 
@@ -38,6 +38,7 @@ public class DetectiveDebugHud : MonoBehaviour
                     ? (_investigation.RemainingTime > 0f ? "INVESTIGATING" : "MOVING TO EVIDENCE")
                     : "PATROLLING";
         GUILayout.Label($"State: {state}");
+        GUILayout.Label($"Evidence Awareness: {(_investigation != null && _investigation.HasEvidenceAwareness ? "YES" : "NO")}");
 
         if (chasing)
         {
@@ -50,8 +51,10 @@ public class DetectiveDebugHud : MonoBehaviour
         }
         else if (killerDetected)
         {
+            bool aware = _investigation != null && _investigation.HasEvidenceAwareness;
             GUILayout.Label($"Killer distance: {_killerDetection.DistanceToKiller} m  " +
-                            $"LOS: {(_killerDetection.HasClearLineOfSight ? "CLEAR" : "BLOCKED")}");
+                            $"LOS: {(_killerDetection.HasClearLineOfSight ? "CLEAR" : "BLOCKED")}  " +
+                            $"Chase Allowed: {(aware ? "YES" : "NO")}");
         }
 
         if (!_patrol.HasRoute)

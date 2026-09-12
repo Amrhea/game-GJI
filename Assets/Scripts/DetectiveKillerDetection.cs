@@ -7,10 +7,9 @@ using UnityEngine;
 ///   1. killer inside the detection radius, AND
 ///   2. an unobstructed Physics2D.Linecast reaches the killer.
 /// Detection is binary and local; there is no suspicion meter, vision cone or
-/// memory. While detected the detective stops all lower-priority movement
-/// (patrol / evidence investigation); DetectiveChase consumes the KillerDetected
-/// event to start pursuing. KillerDetected/KillerLost fire once per transition,
-/// so the console is not spammed every frame.
+/// memory. Movement interruption and the pursuit only engage once the detective
+/// has evidence awareness (DetectiveInvestigation owns that state). KillerDetected/
+/// KillerLost fire once per transition, so the console is not spammed every frame.
 /// </summary>
 [RequireComponent(typeof(DetectivePatrol))]
 [RequireComponent(typeof(Rigidbody2D))]
@@ -83,22 +82,39 @@ public class DetectiveKillerDetection : MonoBehaviour
         {
             if (!IsKillerDetected)
             {
-                // Enter detection once: pause all lower-priority movement and abort
-                // any in-progress evidence investigation (it must NOT auto-resume).
+                // Enter detection once. Movement/pursuit only engages when the
+                // detective has evidence awareness — chase is gated by it.
                 IsKillerDetected = true;
-                _patrol.SetPatrolPaused(true);
-                _investigation?.AbortForKillerDetection();
-                KillerDetected?.Invoke();
-                Debug.Log($"[{nameof(DetectiveKillerDetection)}] KILLER DETECTED " +
-                          $"(distance {DistanceToKiller} m, LOS clear) — movement stopped");
+                if (_investigation == null || _investigation.HasEvidenceAwareness)
+                {
+                    _patrol.SetPatrolPaused(true);
+                    _investigation?.AbortForKillerDetection();
+                    KillerDetected?.Invoke();
+                    Debug.Log($"[{nameof(DetectiveKillerDetection)}] KILLER DETECTED " +
+                              $"(distance {DistanceToKiller} m, LOS clear) — movement stopped");
+                }
+                else
+                {
+                    Debug.Log($"[{nameof(DetectiveKillerDetection)}] KILLER DETECTED " +
+                              $"(distance {DistanceToKiller} m, LOS clear) — no evidence awareness yet, patrol continues");
+                }
             }
         }
         else if (IsKillerDetected)
         {
             IsKillerDetected = false;
-            _patrol.SetPatrolPaused(false);
-            KillerLost?.Invoke();
-            Debug.Log($"[{nameof(DetectiveKillerDetection)}] Killer out of view — patrol resumed");
+            if (_investigation == null || _investigation.HasEvidenceAwareness)
+            {
+                // Chase was actually active; release the pause so patrol resumes.
+                _patrol.SetPatrolPaused(false);
+                KillerLost?.Invoke();
+                Debug.Log($"[{nameof(DetectiveKillerDetection)}] Killer out of view — patrol resumed");
+            }
+            else
+            {
+                // Never paused patrol (no awareness) — must not touch its pause.
+                Debug.Log($"[{nameof(DetectiveKillerDetection)}] Killer out of view (no chase was active)");
+            }
         }
     }
 

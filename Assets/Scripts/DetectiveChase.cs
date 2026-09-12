@@ -1,13 +1,14 @@
 using UnityEngine;
 
 /// <summary>
-/// Chase pass: when DetectiveKillerDetection raises KillerDetected, the detective
-/// stops patrol/investigation movement and actively pursues the killer's CURRENT
-/// position every fixed update at chaseSpeed. Movement reuses DetectivePatrol's
-/// kinematic step helper (no new movement framework). Detection responsibility
-/// stays in DetectiveKillerDetection; this component only reacts to its events.
-/// The killer-lost transition is intentionally NOT designed here (next task) —
-/// on KillerLost chase simply stops and DetectiveKillerDetection resumes patrol.
+/// Chase pass: the detective pursues the killer ONLY when both conditions hold:
+///   EvidenceAwareness == true  (a blood/corpse investigation was completed)
+///   AND
+///   KillerDetected == true     (existing DetectiveKillerDetection LOS)
+/// Until evidence is discovered, seeing the killer does NOT stop patrol or abort
+/// an in-progress investigation. Movement reuses DetectivePatrol's kinematic
+/// step helper at chaseSpeed (4 m/s baseline). The killer-lost transition simply
+/// returns the detective to patrol — no last-known-position, no search.
 /// Local gameplay only; no networking.
 /// </summary>
 [RequireComponent(typeof(DetectivePatrol))]
@@ -19,6 +20,7 @@ public class DetectiveChase : MonoBehaviour
 
     private DetectivePatrol _patrol;
     private DetectiveKillerDetection _killerDetection;
+    private DetectiveInvestigation _investigation;
 
     /// <summary>True while actively pursuing the killer.</summary>
     public bool IsChasing { get; private set; }
@@ -29,6 +31,7 @@ public class DetectiveChase : MonoBehaviour
     {
         _patrol = GetComponent<DetectivePatrol>();
         _killerDetection = GetComponent<DetectiveKillerDetection>();
+        _investigation = GetComponent<DetectiveInvestigation>();
     }
 
     private void OnEnable()
@@ -57,21 +60,28 @@ public class DetectiveChase : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // Reconcile every fixed update so chase correctly begins the moment
+        // awareness becomes true while the killer is already in view, and safely
+        // ends when the killer leaves the detection conditions.
+        bool aware = _investigation == null || _investigation.HasEvidenceAwareness;
+        bool shouldChase = aware && _killerDetection.IsKillerDetected && _killerDetection.KillerTransform != null;
+
+        if (shouldChase && !IsChasing)
+        {
+            BeginChase();
+        }
+        else if (!shouldChase && IsChasing)
+        {
+            EndChase();
+        }
+
         if (!IsChasing)
         {
             return;
         }
 
         // Follow the killer's CURRENT position, re-read every fixed update.
-        Transform killer = _killerDetection.KillerTransform;
-        if (killer == null)
-        {
-            // Killer destroyed/removed mid-chase: stop safely. No recovery system here.
-            EndChase();
-            return;
-        }
-
-        _patrol.MoveStepToward(killer.position, chaseSpeed);
+        _patrol.MoveStepToward(_killerDetection.KillerTransform.position, chaseSpeed);
     }
 
     private void BeginChase()
@@ -82,8 +92,10 @@ public class DetectiveChase : MonoBehaviour
         }
 
         IsChasing = true;
-        // Chase owns movement now; patrol must stay paused.
+        // Chase owns movement now: patrol stays paused and any running evidence
+        // investigation is preempted so nothing fights over MovePosition.
         _patrol.SetPatrolPaused(true);
+        _investigation?.AbortForKillerDetection();
         Debug.Log($"[{nameof(DetectiveChase)}] CHASING at {chaseSpeed} m/s");
     }
 
@@ -95,8 +107,8 @@ public class DetectiveChase : MonoBehaviour
         }
 
         IsChasing = false;
-        // NOTE: patrol resume is intentionally left to DetectiveKillerDetection
-        // (it unpauses on KillerLost). No search/last-known-position system here.
+        // Patrol resume is handled by DetectiveKillerDetection (it releases the
+        // pause on KillerLost). No search/last-known-position system here.
         Debug.Log($"[{nameof(DetectiveChase)}] Chase ended");
     }
 }
