@@ -9,10 +9,11 @@ public class JanitorDebugHud : MonoBehaviour
     [SerializeField] private JanitorMovement movement;
     [SerializeField] private JanitorCleanup cleanup;
     [SerializeField] private JanitorCorpseDrag corpseDrag;
+    [SerializeField] private JanitorLightSwitch lightSwitch;
 
     private void OnGUI()
     {
-        GUILayout.BeginArea(new Rect(10f, 10f, 340f, 150f), GUI.skin.box);
+        GUILayout.BeginArea(new Rect(10f, 10f, 360f, 200f), GUI.skin.box);
 
         GUILayout.Label("=== JANITOR DEBUG ===");
 
@@ -40,6 +41,24 @@ public class JanitorDebugHud : MonoBehaviour
             GUILayout.Label(cleanup != null
                 ? $"E near Blood: clean (range {cleanup.InteractionRange:0.00} m) | E near Corpse: drag (range {(corpseDrag != null ? corpseDrag.InteractionRange : 0f):0.00} m)"
                 : "Interact: no cleanup component");
+        }
+
+        if (lightSwitch != null)
+        {
+            GUILayout.Label($"Lights: {JanitorLamp.ActiveCount}/{JanitorLamp.TotalCount} ON (min {JanitorLamp.MinimumActiveCount})");
+            JanitorLamp lamp = lightSwitch.FindNearestLamp();
+            if (lamp == null)
+            {
+                GUILayout.Label("Nearest Lamp: NO");
+            }
+            else if (!lamp.IsOn)
+            {
+                GUILayout.Label($"Lamp OFF: {lamp.OffRemaining:0.0}s remaining");
+            }
+            else
+            {
+                GUILayout.Label($"Nearest Lamp: YES (E to turn off, range {lightSwitch.InteractionRange:0.00} m)");
+            }
         }
 
         GUILayout.EndArea();

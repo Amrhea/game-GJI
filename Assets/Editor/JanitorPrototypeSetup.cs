@@ -76,10 +76,14 @@ public static class JanitorPrototypeSetup
         SetField(corpseDrag, "input", janitor.GetComponent<JanitorInput>());
         SetField(cleanup, "drag", corpseDrag);
 
+        // Instant lamp interaction (lowest E priority; self-wires its peers).
+        janitor.AddComponent<JanitorLightSwitch>();
+
         JanitorDebugHud hud = janitor.AddComponent<JanitorDebugHud>();
         SetField(hud, "movement", janitor.GetComponent<JanitorMovement>());
         SetField(hud, "cleanup", cleanup);
         SetField(hud, "corpseDrag", corpseDrag);
+        SetField(hud, "lightSwitch", janitor.GetComponent<JanitorLightSwitch>());
 
         // Test Blood instances (runtime evidence normally spawned by the Killer).
         // One inside interaction range (~1.3 m), one outside (~2.7 m) for range testing.
@@ -100,11 +104,42 @@ public static class JanitorPrototypeSetup
         zoneRenderer.sprite = square;
         zoneRenderer.color = new Color(0.2f, 0.8f, 0.35f, 0.8f);
         zoneRenderer.sortingOrder = -5;
-        zoneGo.transform.position = new Vector3(10f, -5f, 0f);
+        zoneGo.transform.position = new Vector3(7f, 3f, 0f);
         zoneGo.transform.localScale = new Vector3(3f, 3f, 1f);
         BoxCollider2D zoneCollider = zoneGo.AddComponent<BoxCollider2D>();
         zoneCollider.isTrigger = true;
         SetColliderField(corpseDrag, "disposalZone", zoneCollider);
+
+        // Prototype lamps: 4 point lights for the lighting interaction test.
+        // Ceil(4 * 0.30) = 2 -> at most 2 of the 4 may be OFF at once.
+        Vector2[] lampPositions =
+        {
+            new Vector2(-8f, 4f), new Vector2(8f, 4f),
+            new Vector2(-8f, -4f), new Vector2(8f, -4f),
+        };
+        for (int i = 0; i < lampPositions.Length; i++)
+        {
+            var lampGo = new GameObject($"Lamp_{i + 1}");
+            lampGo.transform.position = lampPositions[i];
+            lampGo.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
+
+            SpriteRenderer lampRenderer = lampGo.AddComponent<SpriteRenderer>();
+            lampRenderer.sprite = square;
+            lampRenderer.color = new Color(1f, 0.9f, 0.4f);
+            lampRenderer.sortingOrder = -4;
+
+            Light2D pointLight = lampGo.AddComponent<Light2D>();
+            pointLight.lightType = Light2D.LightType.Point;
+            pointLight.intensity = 1f;
+            pointLight.color = new Color(1f, 0.95f, 0.75f);
+            pointLight.pointLightOuterRadius = 3.5f;
+
+            CircleCollider2D lampCollider = lampGo.AddComponent<CircleCollider2D>();
+            lampCollider.isTrigger = true;
+            lampCollider.radius = 0.5f;
+
+            lampGo.AddComponent<JanitorLamp>();
+        }
 
         EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene(), ScenePath);
 
@@ -119,7 +154,8 @@ public static class JanitorPrototypeSetup
 
         Debug.Log("[JanitorPrototypeSetup] Done. Open 'Assets/Scenes/JanitorPrototype.unity' and press Play. " +
                   "Controls: WASD/Arrows to move (5 m/s), E near Blood to clean (1.75 m, 5 s; moving cancels), " +
-                  "E near Corpse to drag (2.5 m/s; E again to drop), carry a dragged Corpse into the green DisposalZone to dispose it.");
+                  "E near Corpse to drag (2.5 m/s; E again to drop), carry a dragged Corpse into the green DisposalZone to dispose it, " +
+                  "E near a Lamp to turn it off for 15 s (min 30% of lamps must stay ON).");
     }
 
     private static void SetField(Object obj, string fieldName, object value)
