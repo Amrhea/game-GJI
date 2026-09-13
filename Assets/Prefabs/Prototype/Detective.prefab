@@ -175,6 +175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad561cab4508178409b8a7d498bc8dd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DetectivePatrol
+  patrolRoute: {fileID: 0}
   waypoints: []
   patrolSpeed: 2.5
   arrivalThreshold: 0.15

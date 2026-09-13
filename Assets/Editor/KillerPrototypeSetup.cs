@@ -40,7 +40,8 @@ public static class KillerPrototypeSetup
 
         Debug.Log("[KillerPrototypeSetup] Done. Open 'Assets/Scenes/KillerPrototype.unity' and press Play. " +
                   "Controls: WASD/Arrows move, LeftShift sprint, Space kill. " +
-                  "The detective patrols the cyan route; edit 'Patrol Points' children to reshape it.");
+                  "The detective patrols the cyan route; edit the 'Patrol Points' children in the " +
+                  "Hierarchy to reshape it (add/remove/reorder/move freely — the route is read live).");
     }
 
     private static Sprite EnsureSquareSprite()
@@ -298,6 +299,7 @@ public static class KillerPrototypeSetup
             var point = new GameObject($"PatrolPoint_{(char)('A' + i)}");
             point.transform.SetParent(routeParent.transform);
             point.transform.position = routePositions[i];
+            point.AddComponent<DetectivePatrolPoint>();
             waypoints[i] = point.transform;
         }
 
@@ -309,6 +311,7 @@ public static class KillerPrototypeSetup
         {
             routeProperty.GetArrayElementAtIndex(i).objectReferenceValue = waypoints[i];
         }
+        serialized.FindProperty("patrolRoute").objectReferenceValue = routeParent.transform;
         serialized.ApplyModifiedPropertiesWithoutUndo();
 
         EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene(), ScenePath);
