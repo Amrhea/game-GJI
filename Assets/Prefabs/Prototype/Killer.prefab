@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 2766950530014412753}
   - component: {fileID: 1504234393944644208}
   - component: {fileID: 3636974431613397392}
+  - component: {fileID: 7873206487215849150}
   m_Layer: 0
   m_Name: Killer
   m_TagString: Untagged
@@ -258,3 +259,17 @@ MonoBehaviour:
   stamina: {fileID: 5909663561319082544}
   movement: {fileID: 2766950530014412753}
   kill: {fileID: 1504234393944644208}
+--- !u!114 &7873206487215849150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8115054128037791031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a039e566255f54a4ab47472c9861e201, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KillerCooldownUI
+  fillImage: {fileID: 0}
+  canvasContainer: {fileID: 0}

@@ -22,6 +22,7 @@ public class KillerKill : MonoBehaviour
     [SerializeField] private GameObject bloodPrefab;
 
     public float KillRange => killRange;
+    public float KillCooldown => killCooldown;
     public float CooldownRemaining { get; private set; }
     public bool IsOnCooldown => CooldownRemaining > 0f;
 
