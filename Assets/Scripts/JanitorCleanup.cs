@@ -37,6 +37,8 @@ public class JanitorCleanup : MonoBehaviour
     /// <summary>Interaction range (baseline 1.75 m).</summary>
     public float InteractionRange => interactionRange;
 
+    public Evidence Target => _target;
+
     /// <summary>True when a Blood is within interaction range — lets lower-priority
     /// E consumers (e.g. JanitorLightSwitch) know this action owns the press.</summary>
     public bool BloodInRange => FindNearestBlood() != null;
